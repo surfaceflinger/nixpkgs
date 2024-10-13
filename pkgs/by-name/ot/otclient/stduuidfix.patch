@@ -1,0 +1,13 @@
+diff --git a/src/framework/util/crypt.h b/src/framework/util/crypt.h
+index fd02c335..5a6e3597 100644
+--- a/src/framework/util/crypt.h
++++ b/src/framework/util/crypt.h
+@@ -25,7 +25,7 @@
+ #include "../global.h"
+ 
+ #include <string>
+-#include <stduuid/uuid.h>
++#include <uuid.h>
+ 
+ #ifdef USE_GMP
+ #include <gmp.h>

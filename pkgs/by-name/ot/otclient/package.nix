@@ -16,7 +16,16 @@
   qt6,
   stdenv,
   zlib,
-  tibiaUrl ? "https://tibiaclient.otslist.eu/getfile/y9syx7ajy6/tibia76.exe",
+  protobuf_26,
+  xz,
+  nlohmann_json,
+  asio,
+  stduuid,
+  pugixml,
+  httplib,
+  openssl,
+  parallel-hashmap,
+  tibiaUrl ? "https://ots.me/downloads/data/tibia-clients/windows/exe/Tibia760.exe",
   tibiaHash ? "sha256-RcqJQdaXJPcHVHZSyXuQhlyiYdiT+rpJfhjirHdWuiI=",
   tibiaVer ? "760",
 }:
@@ -29,36 +38,60 @@ let
 in
 stdenv.mkDerivation (_finalAttrs: {
   pname = "otclient";
-  version = "0-unstable-2024-09-14";
+  version = "0-unstable-2024-10-13";
 
   src = fetchFromGitHub {
-    owner = "edubart";
+    owner = "mehah";
     repo = "otclient";
-    rev = "dab86e610991092fe8b2471f7de55a7c986b3cd2";
-    hash = "sha256-v7caLBz2DLgLKV4TNbbvtSIvbSW79RwT9GqRTl5chqo=";
+    rev = "22db98ea35a0d4098422d2c7d690931c4c3c2fe9";
+    hash = "sha256-okWscd54FEUzXgMb4G9dQ0pW8Pm4NMGq7k9e2XZAiLU=";
   };
+
+  patches = [ ./vorbisfix.patch ./stduuidfix.patch ];
 
   nativeBuildInputs = [
     cmake
+    protobuf_26
   ];
 
   buildInputs = [
-    boost
+    asio
+    #boost
     glew
-    gmp
-    libGL
+    #gmp
+    #libGL
     libvorbis
     libX11
     luajit
+    nlohmann_json
     openal
     physfs
+    stduuid
+    xz
     zlib
+    pugixml
+    httplib
+    openssl
+    parallel-hashmap
   ];
 
   cmakeFlags = [
-    "-DUSE_STATIC_LIBS=OFF"
-    "-DLUAJIT=ON"
+  #  "-DUSE_STATIC_LIBS=OFF"
+  #  "-DLUAJIT=ON"
   ];
+
+  postPatch = ''
+    #runHook prePatch
+    pushd src/protobuf
+      #chmod +x ./generate.sh && ./generate.sh
+      protoc --cpp_out=. *.proto
+    popd
+    #runHook postPatch
+  '';
+
+  installPhase = ''
+    
+  '';
 
   postInstall = ''
     ${lib.getExe innoextract} -d $out/share/otclient/data/things/ ${tibiaInstaller} 
