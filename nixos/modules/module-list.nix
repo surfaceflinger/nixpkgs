@@ -752,6 +752,7 @@
   ./services/hardware/vdr.nix
   ./services/hardware/watt.nix
   ./services/home-automation/deye-dummycloud.nix
+  ./services/hardware/zcfan.nix
   ./services/home-automation/ebusd.nix
   ./services/home-automation/esphome.nix
   ./services/home-automation/evcc.nix
